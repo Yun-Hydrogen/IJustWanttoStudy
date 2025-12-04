@@ -59,10 +59,18 @@
             padding: 0 !important;
         }
 
+        /* 全模式题目衬底收紧 */
+        .tk-quest-item,
+        .quesroot {
+            margin-bottom: 18px !important;
+            padding: 10px 0 !important;
+        }
+
         /* 题目样式优化 */
         body.clean-mode .tk-quest-item {
-            margin-bottom: 30px !important;
-            padding-bottom: 20px !important;
+            margin-bottom: 22px !important;
+            padding-top: 8px !important;
+            padding-bottom: 12px !important;
             border-bottom: 1px dashed #ccc !important;
             background: #fff !important;
         }
@@ -75,14 +83,14 @@
             background: #ffffff !important;
             border: 1px solid #e6ebf2 !important;
             border-radius: 8px !important;
-            padding: 20px !important;
+            padding: 16px !important;
             box-shadow: 0 8px 20px rgba(15, 23, 42, 0.06) !important;
         }
 
         body.clean-mode .exam-item__opt {
             background-color: #f5f7fa !important;
             border: 1px solid #dde3ec !important;
-            padding: 18px !important;
+            padding: 14px !important;
             border-radius: 8px !important;
             margin-top: 12px !important;
             box-shadow: inset 0 1px 0 rgba(255,255,255,0.6), 0 6px 18px rgba(56, 103, 214, 0.08) !important;
@@ -91,7 +99,7 @@
         #ijws-practice-answers .exam-item__opt {
             background-color: #f5f7fa !important;
             border: 1px solid #dde3ec !important;
-            padding: 18px !important;
+            padding: 14px !important;
             border-radius: 8px !important;
             box-shadow: inset 0 1px 0 rgba(255,255,255,0.6), 0 6px 18px rgba(56, 103, 214, 0.08) !important;
             margin-top: 6px !important;
@@ -118,9 +126,14 @@
         /* 标题样式优化 */
         body.clean-mode .title-txt {
             font-weight: bold !important;
-            font-family: "SimSun", "宋体", serif !important;
+            font-family: "SimHei", "黑体", "Microsoft YaHei", sans-serif !important;
             font-size: 22px !important;
             letter-spacing: 0.5px !important;
+            background: #f1f3f5 !important;
+            display: inline-block !important;
+            padding: 6px 14px !important;
+            border-radius: 6px !important;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08) !important;
         }
 
         /* 练习模式答案区 */
@@ -130,7 +143,7 @@
 
         #ijws-practice-answers {
             margin-top: 40px;
-            padding: 24px;
+            padding: 18px;
             border: 1px dashed #39C5BB;
             border-radius: 8px;
             background: #fdfefe;
@@ -144,8 +157,8 @@
         }
 
         .ijws-practice-answer {
-            margin-bottom: 18px;
-            padding-bottom: 16px;
+            margin-bottom: 14px;
+            padding-bottom: 12px;
             border-bottom: 1px solid #eee;
         }
 
@@ -200,6 +213,7 @@
     const cursorSvg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024"><defs><filter id="cursorShadow" x="-20%" y="-20%" width="140%" height="140%"><feDropShadow dx="4" dy="4" stdDeviation="6" flood-color="#999999" flood-opacity="0.6"/></filter></defs><g transform="translate(512 512) rotate(-30) scale(0.5) translate(-512 -512)"><path filter="url(#cursorShadow)" fill="#d3d3d3" d="M179.2 920.96c-16 0-32.64-6.4-44.8-18.56-18.56-18.56-23.68-46.72-13.44-71.04L442.88 99.2c10.24-23.04 33.28-38.4 58.88-38.4s48.64 15.36 58.88 38.4l321.92 732.16c10.88 24.96 5.12 52.48-13.44 71.04-18.56 18.56-46.08 23.68-70.4 13.44l-296.96-117.76-298.24 118.4c-8.32 3.2-16 4.48-24.32 4.48zm-10.88-94.08c-0.64 0-1.28 0.64-1.92 0.64l1.92-0.64zm665.6-0.64l1.28 0.64c-0.64 0-1.28 0-1.28-0.64zm-332.8-622.08l-261.12 593.92 243.2-96.64c11.52-4.48 24.32-4.48 35.84 0l243.2 96.64-261.12-593.92z"/></g></svg>`;
     const cursorDataUrl = `data:image/svg+xml;utf8,${encodeURIComponent(cursorSvg)}`;
     const PRACTICE_CONTAINER_ID = 'ijws-practice-answers';
+    const GITHUB_URL = 'https://github.com/Yun-Hydrogen/IJustWanttoStudy';
 
     // 2. 定义 UI 样式
     const uiCss = `
@@ -393,6 +407,7 @@
     let isDragging = false;
     let startX, startY, initialLeft, initialTop;
     let toastTimer;
+    let longPressTimer;
 
     // 显示提示
     function showToast(message, iconSvg, iconColor) {
@@ -512,6 +527,10 @@
     }
 
     // 拖拽功能
+    function openGithubHome() {
+        window.open(GITHUB_URL, '_blank');
+    }
+
     mainBtn.addEventListener('mousedown', function(e) {
         isDragging = false;
         startX = e.clientX;
@@ -520,11 +539,18 @@
         initialLeft = rect.left;
         initialTop = rect.top;
 
+        longPressTimer = setTimeout(() => {
+            if (!isDragging) {
+                openGithubHome();
+            }
+        }, 800);
+
         const onMouseMove = (e) => {
             const dx = e.clientX - startX;
             const dy = e.clientY - startY;
             if (Math.abs(dx) > 3 || Math.abs(dy) > 3) {
                 isDragging = true;
+                clearTimeout(longPressTimer);
                 container.style.left = (initialLeft + dx) + 'px';
                 container.style.top = (initialTop + dy) + 'px';
                 container.style.right = 'auto'; // 清除 right 属性以允许自由移动
@@ -532,12 +558,24 @@
         };
 
         const onMouseUp = () => {
+            clearTimeout(longPressTimer);
             document.removeEventListener('mousemove', onMouseMove);
             document.removeEventListener('mouseup', onMouseUp);
         };
 
         document.addEventListener('mousemove', onMouseMove);
         document.addEventListener('mouseup', onMouseUp);
+    });
+
+    ['mouseup', 'mouseleave'].forEach(evt => {
+        mainBtn.addEventListener(evt, () => {
+            clearTimeout(longPressTimer);
+        });
+    });
+
+    mainBtn.addEventListener('contextmenu', function(e) {
+        e.preventDefault();
+        openGithubHome();
     });
 
     // 点击主按钮：展开/收起菜单
