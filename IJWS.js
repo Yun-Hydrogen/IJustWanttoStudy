@@ -1,9 +1,9 @@
 // ==UserScript==
 // @name         [IJWS]I just want to study-我只是想学习
 // @namespace    http://tampermonkey.net/
-// @version      2.0
+// @version      release-20251205
 // @description  组卷网辅助功能，提供刷题模式来沉浸式刷题
-// @author       GitHub Copilot
+// @author       云氢YunHydrogen
 // @match        *://zujuan.xkw.com/*
 // @icon         https://www.xkw.com/favicon.ico
 // @grant        GM_addStyle
