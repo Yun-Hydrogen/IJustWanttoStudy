@@ -72,13 +72,29 @@
             line-height: 1.8 !important;
             margin-bottom: 15px !important;
             color: #000 !important;
+            background: #ffffff !important;
+            border: 1px solid #e6ebf2 !important;
+            border-radius: 8px !important;
+            padding: 20px !important;
+            box-shadow: 0 8px 20px rgba(15, 23, 42, 0.06) !important;
         }
 
         body.clean-mode .exam-item__opt {
             background-color: #f5f7fa !important;
-            padding: 15px !important;
-            border-radius: 6px;
-            margin-top: 10px;
+            border: 1px solid #dde3ec !important;
+            padding: 18px !important;
+            border-radius: 8px !important;
+            margin-top: 12px !important;
+            box-shadow: inset 0 1px 0 rgba(255,255,255,0.6), 0 6px 18px rgba(56, 103, 214, 0.08) !important;
+        }
+
+        #ijws-practice-answers .exam-item__opt {
+            background-color: #f5f7fa !important;
+            border: 1px solid #dde3ec !important;
+            padding: 18px !important;
+            border-radius: 8px !important;
+            box-shadow: inset 0 1px 0 rgba(255,255,255,0.6), 0 6px 18px rgba(56, 103, 214, 0.08) !important;
+            margin-top: 6px !important;
         }
 
         /* 去除 selected-mask 导致的模糊和遮罩 */
@@ -103,6 +119,40 @@
         body.clean-mode .title-txt {
             font-weight: bold !important;
             font-family: "SimSun", "宋体", serif !important;
+            font-size: 22px !important;
+            letter-spacing: 0.5px !important;
+        }
+
+        /* 练习模式答案区 */
+        .ijws-practice-hidden {
+            display: none !important;
+        }
+
+        #ijws-practice-answers {
+            margin-top: 40px;
+            padding: 24px;
+            border: 1px dashed #39C5BB;
+            border-radius: 8px;
+            background: #fdfefe;
+        }
+
+        #ijws-practice-answers .ijws-practice-heading {
+            font-weight: bold;
+            margin-bottom: 16px;
+            color: #39C5BB;
+            font-size: 18px;
+        }
+
+        .ijws-practice-answer {
+            margin-bottom: 18px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .ijws-practice-title {
+            font-weight: bold;
+            margin-bottom: 8px;
+            color: #333;
         }
 
         /* 打印优化 */
@@ -146,17 +196,23 @@
         }
     `;
 
+    // 自定义指针 SVG（用作光标）
+    const cursorSvg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024"><defs><filter id="cursorShadow" x="-20%" y="-20%" width="140%" height="140%"><feDropShadow dx="4" dy="4" stdDeviation="6" flood-color="#999999" flood-opacity="0.6"/></filter></defs><g transform="translate(512 512) rotate(-30) scale(0.5) translate(-512 -512)"><path filter="url(#cursorShadow)" fill="#d3d3d3" d="M179.2 920.96c-16 0-32.64-6.4-44.8-18.56-18.56-18.56-23.68-46.72-13.44-71.04L442.88 99.2c10.24-23.04 33.28-38.4 58.88-38.4s48.64 15.36 58.88 38.4l321.92 732.16c10.88 24.96 5.12 52.48-13.44 71.04-18.56 18.56-46.08 23.68-70.4 13.44l-296.96-117.76-298.24 118.4c-8.32 3.2-16 4.48-24.32 4.48zm-10.88-94.08c-0.64 0-1.28 0.64-1.92 0.64l1.92-0.64zm665.6-0.64l1.28 0.64c-0.64 0-1.28 0-1.28-0.64zm-332.8-622.08l-261.12 593.92 243.2-96.64c11.52-4.48 24.32-4.48 35.84 0l243.2 96.64-261.12-593.92z"/></g></svg>`;
+    const cursorDataUrl = `data:image/svg+xml;utf8,${encodeURIComponent(cursorSvg)}`;
+    const PRACTICE_CONTAINER_ID = 'ijws-practice-answers';
+
     // 2. 定义 UI 样式
     const uiCss = `
         /* 悬浮球容器 */
         #ijws-container {
             position: fixed;
-            top: 120px;
-            left: 100px;
+            bottom: 120px;
+            right: 120px;
             z-index: 2147483647;
             width: 50px;
             height: 50px;
             user-select: none;
+            cursor: url('${cursorDataUrl}') 6 6, auto;
         }
 
         /* 主按钮 */
@@ -166,7 +222,7 @@
             background-color: #66CCFF;
             border-radius: 50%;
             box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-            cursor: grab;
+            cursor: url('${cursorDataUrl}') 6 6, grab;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -181,7 +237,7 @@
             transition: background-color 0.3s, transform 0.2s;
         }
         #ijws-main-btn:active {
-            cursor: grabbing;
+            cursor: url('${cursorDataUrl}') 6 6, grabbing;
             transform: scale(0.95);
         }
         #ijws-main-btn svg {
@@ -204,7 +260,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            cursor: pointer;
+            cursor: url('${cursorDataUrl}') 6 6, pointer;
             opacity: 0;
             transform: translate(0, 0) scale(0);
             transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
@@ -217,15 +273,15 @@
             pointer-events: auto;
         }
         #ijws-container.open .ijws-menu-item:nth-of-type(2) { /* 菜单1: 左侧 */
-            transform: translateX(-60px) scale(1);
+            transform: translateX(-45px) scale(1);
             opacity: 1;
         }
         #ijws-container.open .ijws-menu-item:nth-of-type(3) { /* 菜单2: 上方 */
-            transform: translateY(-60px) scale(1);
+            transform: translateY(-45px) scale(1);
             opacity: 1;
         }
         #ijws-container.open .ijws-menu-item:nth-of-type(4) { /* 菜单3: 右侧 */
-            transform: translateX(60px) scale(1);
+            transform: translateX(45px) scale(1);
             opacity: 1;
         }
 
@@ -233,6 +289,11 @@
         .ijws-menu-item svg {
             width: 18px;
             height: 18px;
+        }
+
+        .ijws-menu-item svg,
+        .ijws-menu-item svg path {
+            fill: #000000 !important;
         }
 
         /* Tooltip */
@@ -311,8 +372,8 @@
     const item3 = document.createElement('div');
     item3.className = 'ijws-menu-item';
     item3.innerHTML = `
-        <svg viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" width="200" height="200"><path d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm0 820c-205.4 0-372-166.6-372-372s166.6-372 372-372 372 166.6 372 372-166.6 372-372 372z" fill="#A8A8A8"></path><path d="M512 440c-39.8 0-72 32.2-72 72s32.2 72 72 72 72-32.2 72-72-32.2-72-72-72zm-240 0c-39.8 0-72 32.2-72 72s32.2 72 72 72 72-32.2 72-72-32.2-72-72-72zm480 0c-39.8 0-72 32.2-72 72s32.2 72 72 72 72-32.2 72-72-32.2-72-72-72z" fill="#A8A8A8"></path></svg>
-        <span class="ijws-tooltip">备用功能</span>
+        <svg t="1764853498269" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="11038" width="200" height="200"><path d="M896 604a36 36 0 0 0-36 36v128c0 50.72-41.28 92-92 92H256c-50.72 0-92-41.28-92-92V256c0-50.72 41.28-92 92-92h128a36 36 0 0 0 0-72H256c-90.44 0-164 73.56-164 164v512c0 90.44 73.56 164 164 164h512c90.44 0 164-73.56 164-164v-128a36 36 0 0 0-36-36z" p-id="11039"></path><path d="M316 544v128a36 36 0 0 0 36 36h128c9.56 0 18.72-3.8 25.44-10.56l320-320c23.88-23.88 37.04-55.68 37.04-89.44s-13.16-65.56-37.04-89.44c-49.32-49.32-129.6-49.32-178.92 0l-320 320a36.004 36.004 0 0 0-10.56 25.44z m72 14.92l309.44-309.44c21.24-21.24 55.84-21.24 77.08 0 10.28 10.28 15.96 24 15.96 38.56s-5.68 28.24-15.96 38.56l-309.44 309.44H388v-77.08z" p-id="11040"></path></svg>
+        <span class="ijws-tooltip">练习模式</span>
     `;
 
     container.appendChild(mainBtn);
@@ -328,7 +389,7 @@
     document.body.appendChild(toast);
 
     // 4. 逻辑实现
-    let currentMode = null; // 'exam' | 'reference' | null
+    let currentMode = null; // 'exam' | 'reference' | 'practice' | null
     let isDragging = false;
     let startX, startY, initialLeft, initialTop;
     let toastTimer;
@@ -397,6 +458,59 @@
         document.querySelectorAll('.ijws-q-num').forEach(el => el.remove());
     }
 
+    function ensureAnswersVisible() {
+        const showAnswerBtn = document.querySelector('.tklabel-checkbox.show-answer.checkbox-default');
+        if (showAnswerBtn && !showAnswerBtn.classList.contains('checked')) {
+            showAnswerBtn.click();
+        }
+    }
+
+    function clearPracticeArtifacts() {
+        document.querySelectorAll('.ijws-practice-hidden').forEach(el => el.classList.remove('ijws-practice-hidden'));
+        const appendix = document.getElementById(PRACTICE_CONTAINER_ID);
+        if (appendix) {
+            appendix.remove();
+        }
+    }
+
+    function moveAnswersToAppendix() {
+        const host = document.querySelector('.page.exam-detail') || document.querySelector('.exam-cnt') || document.body;
+        if (!host) return;
+
+        let appendix = document.getElementById(PRACTICE_CONTAINER_ID);
+        if (!appendix) {
+            appendix = document.createElement('div');
+            appendix.id = PRACTICE_CONTAINER_ID;
+            host.appendChild(appendix);
+        }
+
+        appendix.innerHTML = '<div class="ijws-practice-heading">答案</div>';
+
+        const questions = document.querySelectorAll('.tk-quest-item');
+        questions.forEach((item, index) => {
+            const answerBlock = item.querySelector('.exam-item__opt') || item.querySelector('.exam-item__analyze');
+            if (!answerBlock) return;
+
+            const clone = answerBlock.cloneNode(true);
+            answerBlock.classList.add('ijws-practice-hidden');
+
+            const wrapper = document.createElement('div');
+            wrapper.className = 'ijws-practice-answer';
+            wrapper.innerHTML = `<div class="ijws-practice-title">第 ${index + 1} 题</div>`;
+            wrapper.appendChild(clone);
+            appendix.appendChild(wrapper);
+        });
+    }
+
+    // 统一处理参考模式产生的附加元素
+    function resetReferenceArtifacts() {
+        const showAnswerBtn = document.querySelector('.tklabel-checkbox.show-answer.checkbox-default');
+        if (showAnswerBtn && showAnswerBtn.classList.contains('checked')) {
+            showAnswerBtn.click();
+        }
+        removeQuestionNumbers();
+    }
+
     // 拖拽功能
     mainBtn.addEventListener('mousedown', function(e) {
         isDragging = false;
@@ -444,6 +558,14 @@
             item1.classList.remove('active');
             showToast('已退出试卷模式', iconSvg, '#f56c6c');
         } else {
+            if (currentMode === 'reference') {
+                resetReferenceArtifacts();
+                item2.classList.remove('active');
+            } else if (currentMode === 'practice') {
+                clearPracticeArtifacts();
+                resetReferenceArtifacts();
+                item3.classList.remove('active');
+            }
             // 进入试卷模式
             currentMode = 'exam';
             toggleCleanVisuals(true);
@@ -462,18 +584,15 @@
             currentMode = null;
             toggleCleanVisuals(false);
             item2.classList.remove('active');
-            
-            // 收起答案
-            const showAnswerBtn = document.querySelector('.tklabel-checkbox.show-answer.checkbox-default');
-            if (showAnswerBtn && showAnswerBtn.classList.contains('checked')) {
-                showAnswerBtn.click();
-            }
-            
-            // 移除题号
-            removeQuestionNumbers();
+
+            resetReferenceArtifacts();
 
             showToast('已退出参考模式', iconSvg, '#f56c6c');
         } else {
+            if (currentMode === 'practice') {
+                clearPracticeArtifacts();
+                item3.classList.remove('active');
+            }
             // 进入参考模式
             currentMode = 'reference';
             toggleCleanVisuals(true);
@@ -493,10 +612,43 @@
         }
     });
 
-    // 点击菜单3：备用
+    // 点击菜单3：练习模式
     item3.addEventListener('click', function() {
         const iconSvg = item3.querySelector('svg').outerHTML;
-        showToast('功能开发中...', iconSvg, '#909399');
+
+        if (currentMode === 'practice') {
+            currentMode = null;
+            toggleCleanVisuals(false);
+            item3.classList.remove('active');
+            clearPracticeArtifacts();
+            resetReferenceArtifacts();
+            showToast('已退出练习模式', iconSvg, '#f56c6c');
+            return;
+        }
+
+        if (currentMode === 'exam') {
+            item1.classList.remove('active');
+            resetReferenceArtifacts();
+        } else if (currentMode === 'reference') {
+            item2.classList.remove('active');
+        }
+
+        clearPracticeArtifacts();
+        currentMode = 'practice';
+        toggleCleanVisuals(true);
+        item3.classList.add('active');
+        item1.classList.remove('active');
+        item2.classList.remove('active');
+
+        ensureAnswersVisible();
+
+        setTimeout(() => {
+            if (currentMode !== 'practice') return;
+            addQuestionNumbers();
+            moveAnswersToAppendix();
+        }, 800);
+
+        showToast('已进入练习模式', iconSvg, '#67c23a');
     });
 
 })();
