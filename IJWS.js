@@ -62,8 +62,8 @@
         /* 全模式题目衬底收紧 */
         .tk-quest-item,
         .quesroot {
-            margin-bottom: 12px !important;
-            padding: 10px 0 !important;
+              margin: 0 !important;
+              padding: 0 !important;
         }
 
         /* 题目样式优化 */
