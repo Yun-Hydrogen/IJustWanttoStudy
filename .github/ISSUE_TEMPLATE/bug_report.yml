@@ -1,0 +1,95 @@
+name: Bug 反馈
+description: 创建一个 Bug 报告以帮助我们改进
+title: "[Bug]: "
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        感谢您反馈 Bug！请务必使用中文填写以下信息。
+
+  - type: textarea
+    id: description
+    attributes:
+      label: Bug 描述
+      description: 清楚简洁地描述 Bug 是什么。
+      placeholder: 例如：点击悬浮球没有反应...
+    validations:
+      required: true
+
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: 复现步骤
+      description: 复现该行为的步骤。
+      placeholder: |
+        1. 打开页面 '...'
+        2. 点击 '....'
+        3. 滚动到 '....'
+        4. 看到错误
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: 预期行为
+      description: 清楚简洁地描述您预期的结果。
+      placeholder: 例如：应该展开菜单...
+    validations:
+      required: true
+
+  - type: textarea
+    id: screenshots
+    attributes:
+      label: 截图
+      description: 如果适用，请在此处粘贴截图以帮助说明您的问题。
+      placeholder: 直接粘贴图片即可
+
+  - type: input
+    id: os
+    attributes:
+      label: 操作系统
+      placeholder: 例如 Windows 11, macOS 14
+    validations:
+      required: true
+
+  - type: input
+    id: browser
+    attributes:
+      label: 浏览器
+      placeholder: 例如 Chrome, Edge, Firefox
+    validations:
+      required: true
+
+  - type: input
+    id: browser-version
+    attributes:
+      label: 浏览器版本
+      placeholder: 例如 120.0.6099.109
+
+  - type: dropdown
+    id: script-manager
+    attributes:
+      label: 脚本管理器
+      options:
+        - Tampermonkey
+        - Violentmonkey
+        - Greasemonkey
+        - 其他 (Other)
+    validations:
+      required: true
+
+  - type: input
+    id: script-version
+    attributes:
+      label: 脚本版本
+      placeholder: 例如 v20251205
+    validations:
+      required: true
+
+  - type: textarea
+    id: additional
+    attributes:
+      label: 其他补充
+      description: 在此处添加有关问题的任何其他上下文。
