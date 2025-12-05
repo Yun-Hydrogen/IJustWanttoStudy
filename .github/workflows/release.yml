@@ -1,0 +1,48 @@
+name: Auto Release IJWS
+
+on:
+  push:
+    paths:
+      - 'IJWS.js'
+    branches:
+      - main
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Extract Version
+        id: get_version
+        run: |
+          # 读取 IJWS.js 中的版本号
+          VERSION=$(grep "// @version" IJWS.js | awk '{print $3}')
+          
+          if [ -z "$VERSION" ]; then
+            echo "Error: Could not find version in IJWS.js"
+            exit 1
+          fi
+          
+          echo "Detected version: $VERSION"
+          echo "VERSION=$VERSION" >> $GITHUB_ENV
+
+      - name: Create Release
+        uses: softprops/action-gh-release@v1
+        if: env.VERSION != ''
+        with:
+          tag_name: ${{ env.VERSION }}
+          name: ${{ env.VERSION }}
+          body: |
+            Auto-generated release for version ${{ env.VERSION }}
+            
+            Update content:
+            - Updated IJWS.js
+          files: IJWS.js
+          draft: false
+          prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
