@@ -62,13 +62,13 @@
         /* 全模式题目衬底收紧 */
         .tk-quest-item,
         .quesroot {
-            margin-bottom: 18px !important;
+            margin-bottom: 12px !important;
             padding: 10px 0 !important;
         }
 
         /* 题目样式优化 */
         body.clean-mode .tk-quest-item {
-            margin-bottom: 22px !important;
+            margin-bottom: 16px !important;
             padding-top: 8px !important;
             padding-bottom: 12px !important;
             border-bottom: 1px dashed #ccc !important;
@@ -338,23 +338,23 @@
         }
         
         /* Tooltip 位置 */
-        .ijws-menu-item:nth-of-type(2) .ijws-tooltip { /* 菜单1(左): 提示在上 */
-            bottom: 40px;
-            left: 50%;
-            transform: translateX(-50%);
+        .ijws-menu-item:nth-of-type(2) .ijws-tooltip { /* 菜单1(左): 提示在左 */
+            right: 40px;
+            top: 50%;
+            transform: translateY(-50%);
         }
         .ijws-menu-item:nth-of-type(3) .ijws-tooltip { /* 菜单2(上): 提示在上 */
             bottom: 40px;
             left: 50%;
             transform: translateX(-50%);
         }
-        .ijws-menu-item:nth-of-type(4) .ijws-tooltip { /* 菜单3(右): 提示在上 */
-            bottom: 40px;
-            left: 50%;
-            transform: translateX(-50%);
+        .ijws-menu-item:nth-of-type(4) .ijws-tooltip { /* 菜单3(右): 提示在右 */
+            left: 40px;
+            top: 50%;
+            transform: translateY(-50%);
         }
-        .ijws-menu-item:nth-of-type(5) .ijws-tooltip { /* 菜单4(下): 提示在上 */
-            bottom: 40px;
+        .ijws-menu-item:nth-of-type(5) .ijws-tooltip { /* 菜单4(下): 提示在下 */
+            top: 40px;
             left: 50%;
             transform: translateX(-50%);
         }
