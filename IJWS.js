@@ -66,6 +66,14 @@
               padding: 0 !important;
         }
 
+        /* 统一 wrapper/quesdiv/selected-mask 上下间距 */
+        .wrapper,
+        .quesdiv,
+        .selected-mask {
+            margin-block: 0 !important;
+            padding-block: 0 !important;
+        }
+
         /* 题目样式优化 */
         body.clean-mode .tk-quest-item {
             margin-bottom: 16px !important;
@@ -86,12 +94,13 @@
         body.clean-mode .exam-item__cnt {
             font-size: 16px !important;
             line-height: 1.8 !important;
-            margin-bottom: 15px !important;
+            margin-top: 0 !important;
+            margin-bottom: 0 !important;
             color: #000 !important;
             background: #ffffff !important;
-            border: 1px solid #e6ebf2 !important;
+            border: 0.5px solid #e0e7f1 !important;
             border-radius: 8px !important;
-            padding: 16px !important;
+            padding: 0 16px !important;
             box-shadow: 0 8px 20px rgba(15, 23, 42, 0.06) !important;
         }
 
