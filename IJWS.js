@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         [IJWS]I just want to study-我只是想学习
 // @namespace    http://tampermonkey.net/
-// @version      release-20251205.102
+// @version      release-20251205.103
 // @description  组卷网辅助功能，提供刷题模式来沉浸式刷题
 // @author       云氢YunHydrogen
 // @match        *://zujuan.xkw.com/*
@@ -9,6 +9,7 @@
 // @grant        GM_addStyle
 // @license      AGPL-3.0
 // @downloadURL  https://raw.githubusercontent.com/Yun-Hydrogen/IJustWanttoStudy/refs/heads/main/IJWS.js
+// @updateURL    https://raw.githubusercontent.com/Yun-Hydrogen/IJustWanttoStudy/refs/heads/main/IJWS.js
 // ==/UserScript==
 
 (function() {
