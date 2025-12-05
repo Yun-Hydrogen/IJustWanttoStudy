@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         [IJWS]I just want to study-我只是想学习
 // @namespace    http://tampermonkey.net/
-// @version      release-20251205.103
+// @version      release-20251205.114
 // @description  组卷网辅助功能，提供刷题模式来沉浸式刷题
 // @author       云氢YunHydrogen
 // @match        *://zujuan.xkw.com/*
@@ -428,13 +428,15 @@
         NONE: 'none',
         EXAM: 'exam',
         REFERENCE: 'reference',
-        PRACTICE: 'practice'
+        PRACTICE: 'practice',
+        ANSWER: 'answer'
     });
 
     const MODE_TOAST = Object.freeze({
         [MODE.EXAM]: { enter: '已进入试卷模式', exit: '已退出试卷模式' },
         [MODE.REFERENCE]: { enter: '已进入参考模式', exit: '已退出参考模式' },
-        [MODE.PRACTICE]: { enter: '已进入练习模式', exit: '已退出练习模式' }
+        [MODE.PRACTICE]: { enter: '已进入练习模式', exit: '已退出练习模式' },
+        [MODE.ANSWER]: { enter: '已进入答案模式', exit: '已退出答案模式' }
     });
 
     const state = {
@@ -464,6 +466,9 @@
         practice: `
         <svg t="1764853498269" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="11038" width="200" height="200"><path d="M896 604a36 36 0 0 0-36 36v128c0 50.72-41.28 92-92 92H256c-50.72 0-92-41.28-92-92V256c0-50.72 41.28-92 92-92h128a36 36 0 0 0 0-72H256c-90.44 0-164 73.56-164 164v512c0 90.44 73.56 164 164 164h512c90.44 0 164-73.56 164-164v-128a36 36 0 0 0-36-36z" p-id="11039"></path><path d="M316 544v128a36 36 0 0 0 36 36h128c9.56 0 18.72-3.8 25.44-10.56l320-320c23.88-23.88 37.04-55.68 37.04-89.44s-13.16-65.56-37.04-89.44c-49.32-49.32-129.6-49.32-178.92 0l-320 320a36.004 36.004 0 0 0-10.56 25.44z m72 14.92l309.44-309.44c21.24-21.24 55.84-21.24 77.08 0 10.28 10.28 15.96 24 15.96 38.56s-5.68 28.24-15.96 38.56l-309.44 309.44H388v-77.08z" p-id="11040"></path></svg>
         `,
+        answer: `
+        <svg t="1764943779307" class="icon" viewBox="0 0 1025 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="3446" width="200" height="200"><path d="M450.8 832 119.9 832C89.1 832 64 807 64 776.2L64 119.8C64 89 89.1 64 119.9 64l324 0c12.3 0 24.3 5 32.9 13.7l213.8 214.8c8.7 8.7 13.5 20.3 13.5 32.6l0 47.8c0 17.7 14.3 32 32 32s32-14.3 32-32l0-47.8c0-29.3-11.4-56.9-32.1-77.7L522.1 32.5C501.5 11.9 473 0 443.8 0l-324 0C53.8 0 0 53.7 0 119.8l0 656.5C0 842.3 53.8 896 119.9 896l330.9 0c17.7 0 32-14.3 32-32S468.5 832 450.8 832z" p-id="3447"></path><path d="M517.6 281.8 298.2 501.3 181.3 384.3c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l139.6 139.6c6 6 14.1 9.4 22.6 9.4s16.6-3.4 22.6-9.4l242.1-242.1c12.5-12.5 12.5-32.8 0-45.3C550.4 269.4 530.1 269.4 517.6 281.8z" p-id="3448"></path><path d="M859.4 781.7c52-31.5 86.7-88.7 86.7-153.9 0-99.3-80.5-179.9-179.9-179.9s-179.9 80.5-179.9 179.9c0 65.8 35.3 123.3 88.1 154.7C579.7 816.7 512 907.4 512 1013.8l0 0c0 5.6 4.5 10.2 10.2 10.2l491.7 0c5.6 0 10.2-4.5 10.2-10.2l0 0C1024 906.5 955.2 815.3 859.4 781.7zM684.3 545.9c21.9-21.9 51-33.9 81.9-33.9s60 12.1 81.9 33.9c21.9 21.9 33.9 51 33.9 81.9s-12.1 60-33.9 81.9c-21.9 21.9-51 33.9-81.9 33.9s-60-12.1-81.9-33.9c-21.9-21.9-33.9-51-33.9-81.9S662.4 567.8 684.3 545.9zM584.1 960c8.6-27.9 24-53.5 45.2-74.7 34.3-34.3 80-53.3 128.6-53.3l20.3 0c48.6 0 94.2 18.9 128.6 53.3 21.2 21.2 36.6 46.8 45.2 74.7L584.1 960z" p-id="3449"></path></svg>
+        `,
         extra: `
         <svg t="1764900000000" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="20000" width="200" height="200"><path d="M512 64c-247.424 0-448 200.576-448 448s200.576 448 448 448 448-200.576 448-448S759.424 64 512 64zm0 64c212.064 0 384 171.936 384 384S724.064 896 512 896 128 724.064 128 512 299.936 128 512 128zm32 160h-64v160H320v64h160v160h64V512h160v-64H544V288z" p-id="20001"></path></svg>
         `
@@ -473,6 +478,7 @@
         { mode: MODE.EXAM, tooltip: '试卷模式', icon: ICON.exam },
         { mode: MODE.REFERENCE, tooltip: '参考模式', icon: ICON.reference },
         { mode: MODE.PRACTICE, tooltip: '练习模式', icon: ICON.practice },
+        { mode: MODE.ANSWER, tooltip: '答案模式', icon: ICON.answer },
         {
             tooltip: '备用功能',
             icon: ICON.extra,
@@ -665,6 +671,17 @@
         switch (mode) {
             case MODE.EXAM:
                 break;
+            case MODE.ANSWER:
+                // 答案模式：基础占位实现（功能开发中）
+                // 目前行为：确保答案可见并添加题号，后续将实现更多交互
+                ensureAnswersVisible();
+                setTimeout(() => {
+                    if (state.currentMode === MODE.ANSWER) {
+                        addQuestionNumbers();
+                        showToast('答案模式正在开发中，部分功能暂不可用', ICON.answer, '#FFB300');
+                    }
+                }, 600);
+                break;
             case MODE.REFERENCE:
                 ensureAnswersVisible();
                 setTimeout(() => {
@@ -692,6 +709,10 @@
         switch (mode) {
             case MODE.EXAM:
                 toggleCleanVisuals(false);
+                break;
+            case MODE.ANSWER:
+                toggleCleanVisuals(false);
+                resetReferenceArtifacts();
                 break;
             case MODE.REFERENCE:
                 toggleCleanVisuals(false);
