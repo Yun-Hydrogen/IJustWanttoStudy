@@ -7,7 +7,7 @@
 // @match        *://zujuan.xkw.com/*
 // @icon         https://www.xkw.com/favicon.ico
 // @grant        GM_addStyle
-// @License      AGPL-3.0
+// @license      AGPL-3.0
 // @downloadURL  https://raw.githubusercontent.com/Yun-Hydrogen/IJustWanttoStudy/refs/heads/main/IJWS.js
 // ==/UserScript==
 
