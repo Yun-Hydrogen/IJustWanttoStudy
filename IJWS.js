@@ -75,6 +75,14 @@
             background: #fff !important;
         }
 
+        body.clean-mode .tk-quest-item:hover,
+        body.clean-mode .quesroot:hover {
+            border: none !important;
+            border-bottom: 1px dashed #ccc !important;
+            box-shadow: none !important;
+            background: #fff !important;
+        }
+
         body.clean-mode .exam-item__cnt {
             font-size: 16px !important;
             line-height: 1.8 !important;
@@ -298,6 +306,10 @@
             transform: translateX(45px) scale(1);
             opacity: 1;
         }
+        #ijws-container.open .ijws-menu-item:nth-of-type(5) { /* 菜单4: 下方 */
+            transform: translateY(45px) scale(1);
+            opacity: 1;
+        }
 
         /* 图标 */
         .ijws-menu-item svg {
@@ -337,6 +349,11 @@
             transform: translateX(-50%);
         }
         .ijws-menu-item:nth-of-type(4) .ijws-tooltip { /* 菜单3(右): 提示在上 */
+            bottom: 40px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+        .ijws-menu-item:nth-of-type(5) .ijws-tooltip { /* 菜单4(下): 提示在上 */
             bottom: 40px;
             left: 50%;
             transform: translateX(-50%);
@@ -382,7 +399,7 @@
         <span class="ijws-tooltip">参考模式</span>
     `;
 
-    // 菜单3 (备用)
+    // 菜单3 (练习模式)
     const item3 = document.createElement('div');
     item3.className = 'ijws-menu-item';
     item3.innerHTML = `
@@ -390,10 +407,19 @@
         <span class="ijws-tooltip">练习模式</span>
     `;
 
+    // 菜单4 (备用功能)
+    const item4 = document.createElement('div');
+    item4.className = 'ijws-menu-item';
+    item4.innerHTML = `
+        <svg t="1764900000000" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="20000" width="200" height="200"><path d="M512 64c-247.424 0-448 200.576-448 448s200.576 448 448 448 448-200.576 448-448S759.424 64 512 64zm0 64c212.064 0 384 171.936 384 384S724.064 896 512 896 128 724.064 128 512 299.936 128 512 128zm32 160h-64v160H320v64h160v160h64V512h160v-64H544V288z" p-id="20001"></path></svg>
+        <span class="ijws-tooltip">备用功能</span>
+    `;
+
     container.appendChild(mainBtn);
     container.appendChild(item1);
     container.appendChild(item2);
     container.appendChild(item3);
+    container.appendChild(item4);
     document.body.appendChild(container);
 
     // 提示弹窗
@@ -408,6 +434,16 @@
     let startX, startY, initialLeft, initialTop;
     let toastTimer;
     let longPressTimer;
+
+    const questionClickBlocker = (event) => {
+        if (!currentMode) return;
+        const target = event.target.closest('.tk-quest-item, .quesroot');
+        if (target) {
+            event.stopPropagation();
+            event.preventDefault();
+        }
+    };
+    document.addEventListener('click', questionClickBlocker, true);
 
     // 显示提示
     function showToast(message, iconSvg, iconColor) {
@@ -687,6 +723,12 @@
         }, 800);
 
         showToast('已进入练习模式', iconSvg, '#67c23a');
+    });
+
+    // 菜单4：备用功能提示
+    item4.addEventListener('click', function() {
+        const iconSvg = item4.querySelector('svg').outerHTML;
+        showToast('备用功能开发中，敬请期待', iconSvg, '#409EFF');
     });
 
 })();
