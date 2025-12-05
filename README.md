@@ -7,7 +7,7 @@
 
 ## 📖 简介 (Introduction)
 
-**IJWS-I Just Want to Study-我只是想学习** 是一个为 **组卷网** 设计的 Tampermonkey脚本。
+**IJWS-I Just Want to Study-我只是想学习** 是一个为 **组卷网** 设计的 [Tampermonkey](https://www.tampermonkey.net/) 脚本。
 
 核心理念是 **"Less is More"**。通过移除页面上繁杂的干扰元素（标题、侧边栏、推荐），并将网页重构为类似试卷的布局，帮助你专注于题目本身。无论作为学生，想浏览题目核对答案或进行模拟考试，还是作为考试，预览试题内容,IJWS 都能提供最佳的视图支持。
 
@@ -20,7 +20,7 @@
 
 ### 2. 🔄 三大模式 (Three Modes)
 
-通过页面右下角的 **悬浮球** 即可快速切换：
+通过页面右下角的 **IJWS悬浮球** 即可快速切换：
 
 *   **📝 试卷模式 (Exam Mode)**
     *   仅显示题目，隐藏一切无关信息。
@@ -36,7 +36,7 @@
 
 ## 🛠️ 安装指南 (Installation)
 
-1.  **安装管理器**：首先确保你的浏览器已安装 [Tampermonkey](https://www.tampermonkey.net/)插件。
+1.  **安装管理器**：首先确保你的浏览器已安装 [Tampermonkey](https://www.tampermonkey.net/) 插件。
 2.  **安装脚本**：
       - [点击此处](https://raw.githubusercontent.com/Yun-Hydrogen/IJustWanttoStudy/refs/heads/main/IJWS.js)下载(或复制)js文件。
     - 在 Tampermonkey 中添加新脚本并粘贴代码。
@@ -48,9 +48,9 @@
 1.  **悬浮球**：页面右下角会出现一个 `IJWS` 悬浮球。
 2.  **展开菜单**：点击悬浮球，展开子菜单。
 3.  **切换模式**：点击对应的子悬浮球切换模式（再次点击当前模式可退出，恢复网页原样）。
-    - 📝 图标：试卷模式
-    - 👀 图标：参考模式
-    - ✍️ 图标：练习模式
+    - 📝 ：试卷模式
+    - 👀 ：参考模式
+    - ✍️ ：练习模式
 4.  **拖拽移动**：按住悬浮球可将其拖拽至屏幕任意位置，避免遮挡题目。
 
 ## ⚠️ 免责声明 (Disclaimer)
@@ -63,11 +63,15 @@
 4.  **合规使用**：请在遵守当地法律法规及目标网站服务条款的前提下使用。如因不当使用引发的任何法律纠纷或账号封禁，脚本作者不承担任何责任。
 5.  **如有侵权**：若本脚本的功能侵犯了您的权益，请通过 Issue 联系作者，我们将及时处理。
 
-## 📜 开源协议 (License)
+## � 反馈与建议 (Feedback & Bug Report)
+
+如果您在使用过程中遇到任何问题，或有好的建议，欢迎通过 [GitHub Issues](https://github.com/Yun-Hydrogen/IJustWanttoStudy/issues) 进行反馈。
+
+## �📜 开源协议 (License)
 
 本项目采用 **[AGPL-3.0](LICENSE)** 协议开源。
 
 这意味着您可以自由地使用、修改和分发本脚本，但如果您分发了修改后的版本（即便是通过网络提供服务），您也必须在 **相同的协议 (AGPL-3.0)** 下公开您的源代码。
 
 ---
-*Made with ❤️ by 云氢|Yun_Hydrogen*
+*Made with Github Copilot by 云氢|Yun_Hydrogen*
