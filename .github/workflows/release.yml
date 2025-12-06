@@ -6,6 +6,7 @@ on:
       - 'IJWS.js'
     branches:
       - main
+  workflow_dispatch:
 
 jobs:
   release:
@@ -33,10 +34,7 @@ jobs:
       - name: Prepare Release Notes
         id: prepare_notes
         run: |
-          BODY="${{ github.event.head_commit.message }}"
-          echo "RELEASE_BODY<<'EOF'" >> $GITHUB_ENV
-          echo "$BODY" >> $GITHUB_ENV
-          echo "EOF" >> $GITHUB_ENV
+          printf 'RELEASE_BODY<<EOF\n%s\nEOF\n' "${{ github.event.head_commit.message }}" >> "$GITHUB_ENV"
 
       - name: Create Release
         uses: softprops/action-gh-release@v1
