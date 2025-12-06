@@ -2,7 +2,7 @@
 
 > 🚀 **组卷网沉浸式刷题辅助工具** | 还原纯粹的学习体验 | 组卷网辅助插件
 
-![Version](https://img.shields.io/badge/version-release--20251205.23-blue)
+![Version](https://img.shields.io/badge/version-release--251206.100-blue)
 ![License](https://img.shields.io/badge/license-AGPL--3.0-orange)
 
 ## 📖 简介 (Introduction)
