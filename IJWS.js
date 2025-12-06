@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         [IJWS]I just want to study-我只是想学习
 // @namespace    http://tampermonkey.net/
-// @version      release-20251205.114
+// @version      release-251206.100
 // @description  组卷网辅助功能，提供刷题模式来沉浸式刷题
 // @author       云氢YunHydrogen
 // @match        *://zujuan.xkw.com/*
@@ -237,6 +237,31 @@
             color: #333;
         }
 
+        /* 答案模式答案区 */
+        #ijws-answer-only {
+            margin-top: 32px;
+            padding: 18px;
+            border: 1px dashed #FFB300;
+            border-radius: 8px;
+            background: #fffaf3;
+        }
+        #ijws-answer-only .ijws-answer-heading {
+            font-weight: bold;
+            margin-bottom: 16px;
+            color: #d48806;
+            font-size: 18px;
+        }
+        #ijws-answer-only .ijws-answer-item {
+            margin-bottom: 14px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid #f0d9a4;
+        }
+        #ijws-answer-only .ijws-answer-title {
+            font-weight: bold;
+            margin-bottom: 8px;
+            color: #b36b00;
+        }
+
         /* 打印优化 */
         @media print {
             #ijws-container { display: none !important; }
@@ -281,6 +306,7 @@
     const cursorSvg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024"><defs><filter id="cursorShadow" x="-20%" y="-20%" width="140%" height="140%"><feDropShadow dx="4" dy="4" stdDeviation="6" flood-color="#999999" flood-opacity="0.6"/></filter></defs><g transform="translate(512 512) rotate(-30) scale(0.5) translate(-512 -512)"><path filter="url(#cursorShadow)" fill="#d3d3d3" d="M179.2 920.96c-16 0-32.64-6.4-44.8-18.56-18.56-18.56-23.68-46.72-13.44-71.04L442.88 99.2c10.24-23.04 33.28-38.4 58.88-38.4s48.64 15.36 58.88 38.4l321.92 732.16c10.88 24.96 5.12 52.48-13.44 71.04-18.56 18.56-46.08 23.68-70.4 13.44l-296.96-117.76-298.24 118.4c-8.32 3.2-16 4.48-24.32 4.48zm-10.88-94.08c-0.64 0-1.28 0.64-1.92 0.64l1.92-0.64zm665.6-0.64l1.28 0.64c-0.64 0-1.28 0-1.28-0.64zm-332.8-622.08l-261.12 593.92 243.2-96.64c11.52-4.48 24.32-4.48 35.84 0l243.2 96.64-261.12-593.92z"/></g></svg>`;
     const cursorDataUrl = `data:image/svg+xml;utf8,${encodeURIComponent(cursorSvg)}`;
     const PRACTICE_CONTAINER_ID = 'ijws-practice-answers';
+    const ANSWER_CONTAINER_ID = 'ijws-answer-only';
     const GITHUB_URL = 'https://github.com/Yun-Hydrogen/IJustWanttoStudy';
 
     const uiCss = `
@@ -672,15 +698,13 @@
             case MODE.EXAM:
                 break;
             case MODE.ANSWER:
-                // 答案模式：基础占位实现（功能开发中）
-                // 目前行为：确保答案可见并添加题号，后续将实现更多交互
+                // 答案模式：隐藏题目，仅保留答案列表
                 ensureAnswersVisible();
                 setTimeout(() => {
                     if (state.currentMode === MODE.ANSWER) {
-                        addQuestionNumbers();
-                        showToast('答案模式正在开发中，部分功能暂不可用', ICON.answer, '#FFB300');
+                        buildAnswerOnlyAppendix();
                     }
-                }, 600);
+                }, 400);
                 break;
             case MODE.REFERENCE:
                 ensureAnswersVisible();
@@ -711,8 +735,9 @@
                 toggleCleanVisuals(false);
                 break;
             case MODE.ANSWER:
-                toggleCleanVisuals(false);
+                clearAnswerModeArtifacts();
                 resetReferenceArtifacts();
+                toggleCleanVisuals(false);
                 break;
             case MODE.REFERENCE:
                 toggleCleanVisuals(false);
@@ -839,6 +864,53 @@
             wrapper.appendChild(clone);
             appendix.appendChild(wrapper);
         });
+    }
+
+    function buildAnswerOnlyAppendix() {
+        const host = document.querySelector('.page.exam-detail') || document.querySelector('.exam-cnt') || document.body;
+        if (!host) return;
+
+        let container = document.getElementById(ANSWER_CONTAINER_ID);
+        if (!container) {
+            container = document.createElement('div');
+            container.id = ANSWER_CONTAINER_ID;
+            host.appendChild(container);
+        }
+
+        container.innerHTML = '<div class="ijws-answer-heading">答案列表</div>';
+
+        // 为答案块补充题号，克隆时一并带入
+        addQuestionNumbers();
+
+        document.querySelectorAll('.tk-quest-item').forEach((item, index) => {
+            const answerBlock = item.querySelector('.exam-item__opt') || item.querySelector('.exam-item__analyze');
+            if (!answerBlock) return;
+
+            const clone = answerBlock.cloneNode(true);
+
+            const wrapper = document.createElement('div');
+            wrapper.className = 'ijws-answer-item';
+            wrapper.innerHTML = `<div class="ijws-answer-title">第 ${index + 1} 题</div>`;
+            wrapper.appendChild(clone);
+            container.appendChild(wrapper);
+
+            item.dataset.ijwsHiddenByAnswerMode = 'true';
+            item.style.display = 'none';
+        });
+    }
+
+    function clearAnswerModeArtifacts() {
+        document.querySelectorAll('.tk-quest-item').forEach((item) => {
+            if (item.dataset.ijwsHiddenByAnswerMode === 'true') {
+                item.style.display = '';
+                delete item.dataset.ijwsHiddenByAnswerMode;
+            }
+        });
+
+        const container = document.getElementById(ANSWER_CONTAINER_ID);
+        if (container) {
+            container.remove();
+        }
     }
 
     function resetReferenceArtifacts() {
